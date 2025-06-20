@@ -1,7 +1,10 @@
 package com.aluracursos.literalura.model;
 import com.fasterxml.jackson.annotation.JsonAlias;
-import java.util.List;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import java.util.List;
+//ignora los campos que no hemos mapeado dentro de esta clase
+@JsonIgnoreProperties(ignoreUnknown = true)
 public record Book(
         Long id,
         String title,
