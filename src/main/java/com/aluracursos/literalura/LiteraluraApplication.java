@@ -1,8 +1,8 @@
 package com.aluracursos.literalura;
 
-import com.aluracursos.literalura.model.Author;
-import com.aluracursos.literalura.model.Book;
-import com.aluracursos.literalura.model.GutendexResponse;
+import com.aluracursos.literalura.dto.DatosAutor;
+import com.aluracursos.literalura.dto.DatosLibro;
+import com.aluracursos.literalura.dto.DatosGutendex;
 import com.aluracursos.literalura.service.ConsumoApi;
 import com.aluracursos.literalura.service.ConvierteDatos;
 import org.springframework.boot.CommandLineRunner;
@@ -33,16 +33,17 @@ public class LiteraluraApplication implements CommandLineRunner {
 		//deserealizando el JSON
 		ConvierteDatos conversor = new ConvierteDatos();
 		//trae los datos JSON y los convierte en tipo GutendexResponse
-		var datos = conversor.obtenerDatos(json, GutendexResponse.class);
+
+		var datos = conversor.obtenerDatos(json, DatosGutendex.class);
 		System.out.println("Libros encontrados:");
 //		datos.results().forEach(book -> System.out.println(book.title()));
 
-		for (Book book : datos.results()) {
+		for (DatosLibro book : datos.results()) {
 			System.out.println("📖 " + book.title());
-			for (Author author : book.authors()) {
-				System.out.println("   ✍ Autor: " + author.name() +
-						" (Nacido: " + author.birthYear() +
-						", Fallecido: " + author.deathYear() + ")");
+			for (DatosAutor author : book.authors()) {
+					System.out.println("   ✍ Autor: " + author.name() +
+							" (Nacido: " + author.birthYear() +
+							", Fallecido: " + author.deathYear() + ")");
 			}
 		}
 	}
