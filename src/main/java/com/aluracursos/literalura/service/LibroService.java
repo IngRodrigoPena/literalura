@@ -22,37 +22,36 @@ public class LibroService {
     private ConvierteDatos conversor = new ConvierteDatos();
 
     public void buscarYRegistrarLibroPorTitulo(String tituloBuscado) {
-        // Buscar en base de datos
-        Optional<Libro> libroExistente = libroRepository.findByTituloIgnoreCase(tituloBuscado);
-
-        if (libroExistente.isPresent()) {
-            System.out.println("✅ El libro ya existe en la base de datos: "
-                                                    + libroExistente.get().getTitulo());
-            return;
-        }
-
-        // Consultar API de Gutendex
+        // Paso 1: Consultar Gutendex
         String url = "https://gutendex.com/books/?search=" + tituloBuscado.replace(" ", "%20");
         String json = consumoApi.obtenerDatos(url);
         DatosGutendex respuesta = conversor.obtenerDatos(json, DatosGutendex.class);
 
-        // Verificar si encontró libros
+        // Paso 2: Validar que haya resultados
         if (respuesta.results().isEmpty()) {
             System.out.println("❌ Libro no encontrado en Gutendex.");
             return;
         }
 
-        // Tomamos el primer resultado como el más relevante
+        // Paso 3: Tomar el primer resultado (más relevante)
         DatosLibro libroAPI = respuesta.results().get(0);
 
-        // Convertimos los autores
+        //validando si el libro existe en la BD usando el titulo Real
+        String tituloNormalizado = libroAPI.title();
+        Optional<Libro> libroExistente = libroRepository.findByTituloIgnoreCase(tituloNormalizado);
+
+        if (libroExistente.isPresent()) {
+            System.out.println("✅ El libro ya existe en la base de datos: " + libroExistente.get().getTitulo());
+            return;
+        }
+
+        // Paso 5: Convertir y guardar
         List<Autor> autores = libroAPI.authors().stream()
                 .map(a -> new Autor(a.name(), a.birthYear(), a.deathYear()))
                 .collect(Collectors.toList());
 
-        // Creamos la entidad Libro y la guardamos
         Libro nuevoLibro = new Libro(
-                libroAPI.title(),
+                tituloNormalizado,
                 libroAPI.languages().isEmpty() ? "desconocido" : libroAPI.languages().get(0),
                 libroAPI.downloadCount(),
                 autores
