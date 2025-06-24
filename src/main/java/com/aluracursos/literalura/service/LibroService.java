@@ -35,13 +35,11 @@ public class LibroService {
 
         // Paso 3: Tomar el primer resultado (más relevante)
         DatosLibro libroAPI = respuesta.results().get(0);
+        //verificamos si ya esta en la BD por idGutendex
+        Optional<Libro> existente = libroRepository.findByIdGutendex(libroAPI.idGutendex());
 
-        //validando si el libro existe en la BD usando el titulo Real
-        String tituloNormalizado = libroAPI.title();
-        Optional<Libro> libroExistente = libroRepository.findByTituloIgnoreCase(tituloNormalizado);
-
-        if (libroExistente.isPresent()) {
-            System.out.println("✅ El libro ya existe en la base de datos: " + libroExistente.get().getTitulo());
+        if (existente.isPresent()) {
+            System.out.println("✅ El libro ya existe en la base de datos: " + existente.get().getTitulo());
             return;
         }
 
@@ -51,11 +49,18 @@ public class LibroService {
                 .collect(Collectors.toList());
 
         Libro nuevoLibro = new Libro(
-                tituloNormalizado,
+                libroAPI.idGutendex(),
+                libroAPI.title(),
                 libroAPI.languages().isEmpty() ? "desconocido" : libroAPI.languages().get(0),
                 libroAPI.downloadCount(),
                 autores
         );
+
+        //Evita guardar libros sin idGutendex, o cuando venga como null
+        if (libroAPI.idGutendex() == null) {
+            System.out.println("❌ El libro no tiene un ID válido en Gutendex, no se puede guardar.");
+            return;
+        }
 
         libroRepository.save(nuevoLibro);
         System.out.println("📚 Libro registrado exitosamente: " + nuevoLibro.getTitulo());

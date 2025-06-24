@@ -1,15 +1,17 @@
 package com.aluracursos.literalura.model;
 
 import jakarta.persistence.*;
-
 import java.util.List;
 
 @Entity
 public class Libro {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long id;//id local, autogenerado
+
+    @Column(unique=true)
+    private Long idGutendex;//Clave unica para evitar duplicados
+
     private String titulo;
     private String lenguaje;
     private Integer numeroDescargas;
@@ -20,7 +22,8 @@ public class Libro {
     // Constructor por defecto y getters/setters
     public Libro() {}
 
-    public Libro(String titulo, String idioma, Integer numeroDescargas, List<Autor> autores) {
+    public Libro(Long idGutendex,String titulo, String idioma, Integer numeroDescargas, List<Autor> autores) {
+        this.idGutendex = idGutendex;
         this.titulo = titulo;
         this.lenguaje = idioma;
         this.numeroDescargas = numeroDescargas;
@@ -66,5 +69,13 @@ public class Libro {
 
     public void setAutores(List<Autor> autores) {
         this.autores = autores;
+    }
+
+    public Long getIdGutendex() {
+        return idGutendex;
+    }
+
+    public void setIdGutendex(Long idGutendex) {
+        this.idGutendex = idGutendex;
     }
 }
