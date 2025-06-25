@@ -65,4 +65,37 @@ public class LibroService {
         libroRepository.save(nuevoLibro);
         System.out.println("📚 Libro registrado exitosamente: " + nuevoLibro.getTitulo());
     }
+
+
+    public void listarLibrosRegistrados() {
+        //Recupera todos los libros desde la BD
+        List<Libro> libros = libroRepository.findAll();
+        //verificamos si la lista de libros esta vacia
+        if (libros.isEmpty()) {
+            System.out.println("📭 No hay libros registrados.");
+            return;
+        }
+
+        System.out.println("📚 Libros registrados en la base de datos:");
+        //muestra los datos de cada libro
+        for (Libro libro : libros) {
+            System.out.println("-----------------------------");
+            System.out.println("📖 Título: " + libro.getTitulo());
+            System.out.println("🌐 Idioma: " + libro.getLenguaje());
+            System.out.println("⬇️ Descargas: " + libro.getNumeroDescargas());
+            System.out.println("👤 Autor(es):");
+            for (Autor autor : libro.getAutores()) {
+                String datosAutor = " - " + autor.getNombre();
+                if (autor.getAnioNacimiento() != null) {
+                    datosAutor += " (Nac. " + autor.getAnioNacimiento();
+                    if (autor.getAnioFallecimiento() != null) {
+                        datosAutor += " - Muerte " + autor.getAnioFallecimiento();
+                    }
+                    datosAutor += ")";
+                }
+                System.out.println(datosAutor);
+            }
+        }
+    }
+
 }

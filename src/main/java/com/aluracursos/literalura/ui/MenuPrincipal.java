@@ -37,7 +37,7 @@ public class MenuPrincipal {
                         String titulo = scanner.nextLine();
                         libroService.buscarYRegistrarLibroPorTitulo(titulo);
                     }
-                    case 2 -> System.out.println("🔧 Función aún no implementada");
+                    case 2 -> libroService.listarLibrosRegistrados();
                     case 3 -> System.out.println("🔧 Función aún no implementada");
                     case 4 -> System.out.println("🔧 Función aún no implementada");
                     case 5 -> System.out.println("🔧 Función aún no implementada");
