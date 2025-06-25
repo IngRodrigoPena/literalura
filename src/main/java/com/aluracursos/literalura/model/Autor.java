@@ -3,6 +3,7 @@ package com.aluracursos.literalura.model;
 import jakarta.persistence.*;
 
 @Entity
+@Table(name="Autores")
 public class Autor {
 
     @Id

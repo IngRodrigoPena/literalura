@@ -40,7 +40,11 @@ public class MenuPrincipal {
                     case 2 -> libroService.listarLibrosRegistrados();
                     case 3 -> System.out.println("🔧 Función aún no implementada");
                     case 4 -> System.out.println("🔧 Función aún no implementada");
-                    case 5 -> System.out.println("🔧 Función aún no implementada");
+                    case 5 -> {
+                        System.out.print("🌐 Ingresa el código de idioma (por ejemplo: 'en', 'es', 'fr'): ");
+                        String idioma = scanner.nextLine();
+                        libroService.listarLibrosPorIdioma(idioma);
+                    }
                     case 0 -> System.out.println("👋 Saliendo de la aplicación...");
                     default -> System.out.println("⚠️ Opción no válida. Intente nuevamente.");
                 }

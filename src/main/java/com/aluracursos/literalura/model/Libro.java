@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import java.util.List;
 
 @Entity
+@Table(name="libros")
 public class Libro {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -13,7 +14,7 @@ public class Libro {
     private Long idGutendex;//Clave unica para evitar duplicados
 
     private String titulo;
-    private String lenguaje;
+    private String idioma;
     private Integer numeroDescargas;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -25,7 +26,7 @@ public class Libro {
     public Libro(Long idGutendex,String titulo, String idioma, Integer numeroDescargas, List<Autor> autores) {
         this.idGutendex = idGutendex;
         this.titulo = titulo;
-        this.lenguaje = idioma;
+        this.idioma = idioma;
         this.numeroDescargas = numeroDescargas;
         this.autores = autores;
     }
@@ -47,12 +48,12 @@ public class Libro {
         this.titulo = titulo;
     }
 
-    public String getLenguaje() {
-        return lenguaje;
+    public String getIdioma() {
+        return idioma;
     }
 
-    public void setLenguaje(String lenguaje) {
-        this.lenguaje = lenguaje;
+    public void setIdioma(String idioma) {
+        this.idioma = idioma;
     }
 
     public Integer getNumeroDescargas() {

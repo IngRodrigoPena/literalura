@@ -7,7 +7,6 @@ import com.aluracursos.literalura.model.Libro;
 import com.aluracursos.literalura.repository.LibroRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -81,7 +80,7 @@ public class LibroService {
         for (Libro libro : libros) {
             System.out.println("-----------------------------");
             System.out.println("📖 Título: " + libro.getTitulo());
-            System.out.println("🌐 Idioma: " + libro.getLenguaje());
+            System.out.println("🌐 Idioma: " + libro.getIdioma());
             System.out.println("⬇️ Descargas: " + libro.getNumeroDescargas());
             System.out.println("👤 Autor(es):");
             for (Autor autor : libro.getAutores()) {
@@ -94,6 +93,43 @@ public class LibroService {
                     datosAutor += ")";
                 }
                 System.out.println(datosAutor);
+            }
+        }
+    }
+
+    //busca libros por Idioma
+    public void listarLibrosPorIdioma(String codigoIdioma) {
+        // Normalizar entrada
+        String idioma = codigoIdioma.trim().toLowerCase();
+
+        // Buscar libros por idioma (ignorando mayúsculas/minúsculas)
+        List<Libro> libros = libroRepository.findByIdiomaIgnoreCase(idioma);
+
+        if (libros.isEmpty()) {
+            // Comprobamos si el idioma existe entre los libros registrados
+            List<String> idiomasRegistrados = libroRepository.findAll()
+                    .stream()
+                    .map(Libro::getIdioma)
+                    .distinct()
+                    .collect(Collectors.toList());
+
+            if (idiomasRegistrados.stream().noneMatch(i -> i.equalsIgnoreCase(idioma))) {
+                System.out.println("❌ El idioma '" + idioma + "' no está registrado en ningún libro.");
+            } else {
+                System.out.println("📭 No hay libros registrados en el idioma '" + idioma + "'.");
+            }
+            return;
+        }
+
+        System.out.println("📚 Libros en idioma '" + idioma + "':");
+
+        for (Libro libro : libros) {
+            System.out.println("-----------------------------");
+            System.out.println("📖 Título: " + libro.getTitulo());
+            System.out.println("⬇️ Descargas: " + libro.getNumeroDescargas());
+            System.out.println("👤 Autor(es):");
+            for (Autor autor : libro.getAutores()) {
+                System.out.println(" - " + autor.getNombre());
             }
         }
     }
