@@ -39,7 +39,16 @@ public class MenuPrincipal {
                     }
                     case 2 -> libroService.listarLibrosRegistrados();
                     case 3 -> libroService.listarAutoresRegistrados();
-                    case 4 -> System.out.println("🔧 Función aún no implementada");
+                    case 4 -> {
+                        System.out.print("Ingrese el año a consultar:");
+                        String input = scanner.nextLine();
+                        try{
+                            int anio = Integer.parseInt(input);
+                            libroService.listarAutoresVivosEnAnio(anio);
+                        }catch (NumberFormatException e){
+                            System.out.println("⚠\uFE0F Año inválido. Ingrese un número válido (por ejemplo, 1900).");
+                        }
+                    }
                     case 5 -> {
                         System.out.print("🌐 Ingresa el código de idioma (por ejemplo: 'en', 'es', 'fr'): ");
                         String idioma = scanner.nextLine();

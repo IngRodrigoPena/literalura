@@ -164,4 +164,25 @@ public class LibroService {
                 });
     }
 
+    //Lista autores vivos en un año específico
+    public void listarAutoresVivosEnAnio(int anio) {
+        List<Autor> autoresVivos =
+          autorRepository.findByAnioNacimientoLessThanEqualAndAnioFallecimientoGreaterThanEqualOrAnioFallecimientoIsNull(anio, anio);
+        //List<Autor> findByFechaNacimientoLessThanEqualAndFechaMuerteGreaterThanEqualOrFechaMuerteIsNull(Integer anio1, Integer anio2);
+        if (autoresVivos.isEmpty()) {
+            System.out.println("📭 No se encontraron autores vivos en el año " + anio);
+            return;
+        }
+
+        System.out.println("\n👤 Autores que estaban vivos en el año " + anio + ":");
+        autoresVivos.stream()
+                .sorted(Comparator.comparing(Autor::getNombre, String.CASE_INSENSITIVE_ORDER))
+                .forEach(a -> {
+                    String nacimiento = (a.getAnioNacimiento() != null) ? a.getAnioNacimiento().toString() : "¿?";
+                    String muerte = (a.getAnioFallecimiento() != null) ? a.getAnioFallecimiento().toString() : "¿?";
+                    System.out.println("👤 " + a.getNombre() + " (Nac.: " + nacimiento + ", Falleció: " + muerte + ")");
+                });
+    }
+
+
 }
