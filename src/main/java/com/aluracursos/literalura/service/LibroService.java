@@ -9,9 +9,13 @@ import com.aluracursos.literalura.repository.LibroRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.Comparator;
+import java.util.DoubleSummaryStatistics;
+
+import static com.aluracursos.literalura.util.FormatUtils.*;
 
 @Service
 public class LibroService {
@@ -246,4 +250,55 @@ public class LibroService {
     }
 
 
+    // 1. Estadísticas de descargas
+    public void mostrarEstadisticasDescargas() {
+        List<Libro> libros = libroRepository.findAll();
+
+        if (libros.isEmpty()) {
+            System.out.println("⚠️ No hay libros registrados para generar estadísticas.");
+            return;
+        }
+
+        DoubleSummaryStatistics estadisticas = libros.stream()
+                .filter(libro -> libro.getNumeroDescargas() != null)
+                .mapToDouble(Libro::getNumeroDescargas)
+                .summaryStatistics();
+
+        System.out.println("\n📊 ESTADÍSTICAS DE DESCARGAS DE LIBROS:");
+        System.out.println("Total de libros: " + formatLong(estadisticas.getCount()));
+        System.out.println("Suma total de descargas: " + formatLong((long) estadisticas.getSum()));
+        System.out.println("Promedio de descargas: " + formatDouble(estadisticas.getAverage()));
+        System.out.println("Mínimo de descargas: " + formatLong((long) estadisticas.getMin()));
+        System.out.println("Máximo de descargas: " + formatInt((int) estadisticas.getMax()));
+        System.out.println("------------------------------");
+    }
+
+    // 2. Cantidad de libros por idioma
+    public void contarLibrosPorIdioma() {
+        List<Libro> libros = libroRepository.findAll();
+
+        if (libros.isEmpty()) {
+            System.out.println("⚠️ No hay libros registrados para contar por idioma.");
+            return;
+        }
+
+        Map<String, Long> conteoPorIdioma = libros.stream()
+                .collect(Collectors.groupingBy(
+                        libro -> libro.getIdioma() != null ? libro.getIdioma() : "Desconocido",
+                        Collectors.counting()
+                ));
+
+        System.out.println("\n📚 Cantidad de libros por idioma:");
+        conteoPorIdioma.forEach((idioma, cantidad) ->
+                System.out.println("Idioma: " + idioma + " - Libros: " + cantidad)
+        );
+        System.out.println("------------------------------");
+    }
+
+    // 3. Total de libros registrados
+    public void mostrarTotalLibrosRegistrados() {
+        long total = libroRepository.count();
+        System.out.println("\n📖 Total de libros registrados: " + total);
+        System.out.println("------------------------------");
+    }
 }

@@ -31,6 +31,7 @@ public class MenuPrincipal {
             System.out.println("5. Listar libros por idioma");
             System.out.println("6. Mostrar Top 10 libros mas descargados");
             System.out.println("7. Buscar autor por nombre");
+            System.out.println("8. Estadisticas");
             System.out.println("0. Salir");
             System.out.print("Seleccione una opción: ");
 
@@ -66,6 +67,7 @@ public class MenuPrincipal {
                         String nombre = scanner.nextLine();
                         libroService.buscarAutorPorNombre(nombre);
                     }
+                    case 8 -> mostrarMenuEstadisticas(); 
                     case 0 -> {
                         System.out.println("👋 Saliendo de la aplicación...");
                         SpringApplication.exit(context, () -> 0);
@@ -79,4 +81,30 @@ public class MenuPrincipal {
 
         scanner.close();
     }
+
+    public void mostrarMenuEstadisticas() {
+        Scanner scanner = new Scanner(System.in);
+        while (true) {
+            System.out.println("\n--- Menú Estadísticas ---");
+            System.out.println("1. Estadísticas de descargas");
+            System.out.println("2. Cantidad de libros por idioma");
+            System.out.println("3. Total de libros registrados");
+            System.out.println("0. Volver al menú principal");
+
+            int opcion = scanner.nextInt();
+            scanner.nextLine(); // limpiar buffer
+
+            switch (opcion) {
+                case 1 -> libroService.mostrarEstadisticasDescargas();
+                case 2 -> libroService.contarLibrosPorIdioma();
+                case 3 -> libroService.mostrarTotalLibrosRegistrados();
+                case 0 -> {
+                    System.out.println("Volviendo al menú principal...");
+                    return;
+                }
+                default -> System.out.println("Opción inválida. Intenta de nuevo.");
+            }
+        }
+    }
+
 }
