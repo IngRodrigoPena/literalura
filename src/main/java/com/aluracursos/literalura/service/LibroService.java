@@ -210,5 +210,40 @@ public class LibroService {
                 });
     }
 
+    public void buscarAutorPorNombre(String nombreParcial) {
+        List<Autor> autores = autorRepository.findByNombreContainingIgnoreCase(nombreParcial);
+
+        if (autores.isEmpty()) {
+            System.out.println("⚠️ No se encontraron autores con ese nombre.");
+            return;
+        }
+
+        System.out.println("\n👤 AUTORES ENCONTRADOS:\n");
+
+        for (Autor autor : autores) {
+            System.out.println("📌 Nombre: " + autor.getNombre());
+            System.out.println("📆 Año de nacimiento: " + (autor.getAnioNacimiento() != null ? autor.getAnioNacimiento() : "Desconocido"));
+            System.out.println("🪦 Año de fallecimiento: " + (autor.getAnioFallecimiento() != null ? autor.getAnioFallecimiento() : "Desconocido"));
+
+            List<Libro> libros = libroRepository.findAll()
+                    .stream()
+                    //Por cada libro, revisa si algún autor (anyMatch) tiene un nombre que coincida
+                    // con el autor buscado (sin importar mayúsculas).
+                    //Si hay coincidencia, ese libro se incluye en la lista final.
+                    .filter(libro -> libro.getAutores().stream()
+                            .anyMatch(a -> a.getNombre().equalsIgnoreCase(autor.getNombre())))
+                    .collect(Collectors.toList());
+
+            if (libros.isEmpty()) {
+                System.out.println("📕 Libros registrados: Ninguno");
+            } else {
+                System.out.println("📚 Libros registrados:");
+                libros.forEach(libro -> System.out.println("   - " + libro.getTitulo()));
+            }
+
+            System.out.println("------------------------------");
+        }
+    }
+
 
 }

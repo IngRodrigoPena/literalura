@@ -8,5 +8,7 @@ public interface AutorRepository extends JpaRepository<Autor,Long> {
 
     //lista los autores  vivos en un año especifico
     List<Autor> findByAnioNacimientoLessThanEqualAndAnioFallecimientoGreaterThanEqualOrAnioFallecimientoIsNull(Integer anio1, Integer anio2);
+    //busca autor por nombre
+    List<Autor> findByNombreContainingIgnoreCase(String nombre);
 
 }
