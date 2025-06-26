@@ -4,18 +4,22 @@ import com.aluracursos.literalura.dto.DatosGutendex;
 import com.aluracursos.literalura.dto.DatosLibro;
 import com.aluracursos.literalura.model.Autor;
 import com.aluracursos.literalura.model.Libro;
+import com.aluracursos.literalura.repository.AutorRepository;
 import com.aluracursos.literalura.repository.LibroRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.Comparator;
 
 @Service
 public class LibroService {
 
     @Autowired
     private LibroRepository libroRepository;
+    @Autowired
+    private AutorRepository autorRepository;
 
     private ConsumoApi consumoApi = new ConsumoApi();
     private ConvierteDatos conversor = new ConvierteDatos();
@@ -64,7 +68,6 @@ public class LibroService {
         libroRepository.save(nuevoLibro);
         System.out.println("📚 Libro registrado exitosamente: " + nuevoLibro.getTitulo());
     }
-
 
     public void listarLibrosRegistrados() {
         //Recupera todos los libros desde la BD
@@ -132,6 +135,33 @@ public class LibroService {
                 System.out.println(" - " + autor.getNombre());
             }
         }
+    }
+
+    //lista los autores registrados en la BD
+    public void listarAutoresRegistrados() {
+        List<Autor> autores = autorRepository.findAll();
+
+        if (autores.isEmpty()) {
+            System.out.println("📭 No hay autores registrados.");
+            return;
+        }
+
+        System.out.println("\n📚 Autores registrados (sin duplicados):");
+        autores.stream()
+                .collect(Collectors.toMap(
+                        // clave: nombre en minúsculas para evitar duplicados
+                        autor -> autor.getNombre().toLowerCase(),
+                        // en caso de duplicado, conservar el primero
+                        autor -> autor,
+                        (a1, a2) -> a1
+                ))
+                .values().stream()
+                .sorted(Comparator.comparing(Autor::getNombre, String.CASE_INSENSITIVE_ORDER))
+                .forEach(a -> {
+                    String nacimiento = (a.getAnioNacimiento() != null) ? a.getAnioNacimiento().toString() : "¿?";
+                    String muerte = (a.getAnioFallecimiento() != null) ? a.getAnioFallecimiento().toString() : "¿?";
+                    System.out.println("👤 " + a.getNombre() + " (Nac.: " + nacimiento + ", Falleció: " + muerte + ")");
+                });
     }
 
 }

@@ -38,7 +38,7 @@ public class MenuPrincipal {
                         libroService.buscarYRegistrarLibroPorTitulo(titulo);
                     }
                     case 2 -> libroService.listarLibrosRegistrados();
-                    case 3 -> System.out.println("🔧 Función aún no implementada");
+                    case 3 -> libroService.listarAutoresRegistrados();
                     case 4 -> System.out.println("🔧 Función aún no implementada");
                     case 5 -> {
                         System.out.print("🌐 Ingresa el código de idioma (por ejemplo: 'en', 'es', 'fr'): ");
