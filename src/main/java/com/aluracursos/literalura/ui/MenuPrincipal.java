@@ -29,6 +29,7 @@ public class MenuPrincipal {
             System.out.println("3. Listar autores registrados");
             System.out.println("4. Listar autores vivos en un año específico");
             System.out.println("5. Listar libros por idioma");
+            System.out.println("6. Mostrar Top 10 libros mas descargados");
             System.out.println("0. Salir");
             System.out.print("Seleccione una opción: ");
 
@@ -58,6 +59,7 @@ public class MenuPrincipal {
                         String idioma = scanner.nextLine();
                         libroService.listarLibrosPorIdioma(idioma);
                     }
+                    case 6 -> libroService.mostrarTop10LibrosMasDescargados();
                     case 0 -> {
                         System.out.println("👋 Saliendo de la aplicación...");
                         SpringApplication.exit(context, () -> 0);

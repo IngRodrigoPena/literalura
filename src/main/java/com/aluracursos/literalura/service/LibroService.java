@@ -184,5 +184,31 @@ public class LibroService {
                 });
     }
 
+    public void mostrarTop10LibrosMasDescargados() {
+        //Recupera todos los libros desde la BD.
+        List<Libro> libros = libroRepository.findAll();
+
+        if (libros.isEmpty()) {
+            System.out.println("⚠️ No hay libros registrados en la base de datos.");
+            return;
+        }
+
+        System.out.println("\n📚 TOP 10 LIBROS MÁS DESCARGADOS:\n");
+
+        libros.stream()
+                //Ordena por número de descargas (getNumeroDescargas()), manejando posibles null.
+                .sorted(Comparator.comparing(Libro::getNumeroDescargas, Comparator.nullsLast(Comparator.naturalOrder())).reversed())
+                //limita la lista a los 10 primeros.
+                .limit(10)
+                //4.	Imprime los detalles (titulo, primer autor, idioma, descargas).
+                .forEach(libro -> {
+                    System.out.println("📘 Título: " + libro.getTitulo());
+                    System.out.println("👤 Autor: " + (libro.getAutores().isEmpty() ? "Desconocido" : libro.getAutores().get(0).getNombre()));
+                    System.out.println("🌐 Idioma: " + libro.getIdioma());
+                    System.out.println("⬇️ Descargas: " + libro.getNumeroDescargas());
+                    System.out.println("------------------------------");
+                });
+    }
+
 
 }
