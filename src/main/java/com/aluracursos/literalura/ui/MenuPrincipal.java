@@ -1,6 +1,8 @@
 package com.aluracursos.literalura.ui;
 
 import com.aluracursos.literalura.service.LibroService;
+import org.springframework.boot.SpringApplication;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 import java.util.Scanner;
@@ -9,10 +11,12 @@ import java.util.Scanner;
 public class MenuPrincipal {
 
     private final LibroService libroService;
+    private final ApplicationContext context;
     private final Scanner scanner = new Scanner(System.in);
 
-    public MenuPrincipal(LibroService libroService) {
+    public MenuPrincipal(LibroService libroService, ApplicationContext context) {
         this.libroService = libroService;
+        this.context = context;
     }
 
     public void mostrar() {
@@ -54,7 +58,10 @@ public class MenuPrincipal {
                         String idioma = scanner.nextLine();
                         libroService.listarLibrosPorIdioma(idioma);
                     }
-                    case 0 -> System.out.println("👋 Saliendo de la aplicación...");
+                    case 0 -> {
+                        System.out.println("👋 Saliendo de la aplicación...");
+                        SpringApplication.exit(context, () -> 0);
+                    }
                     default -> System.out.println("⚠️ Opción no válida. Intente nuevamente.");
                 }
             } catch (NumberFormatException e) {
