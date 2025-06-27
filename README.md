@@ -125,25 +125,10 @@ classDiagram
 
 ```mermaid
 graph TD
-    Libro["Libro"]
-    Autor["Autor"]
+    Libro[Libro]
+    Autor[Autor]
 
     Libro -->|tiene| Autor
-
-    subgraph Libro Atributos
-        id[ID (PK)]
-        idGutendex[ID Gutendex (Unique)]
-        titulo[Título]
-        idioma[Idioma]
-        numeroDescargas[Número de Descargas]
-    end
-
-    subgraph Autor Atributos
-        idA[ID (PK)]
-        nombre[Nombre]
-        anioNac[Año de Nacimiento]
-        anioFallec[Año de Fallecimiento]
-    end
 
     Libro --> id
     Libro --> idGutendex
@@ -155,6 +140,18 @@ graph TD
     Autor --> nombre
     Autor --> anioNac
     Autor --> anioFallec
+
+    id[ID PK]
+    idGutendex[ID Gutendex Unique]
+    titulo[Título]
+    idioma[Idioma]
+    numeroDescargas[Número Descargas]
+
+    idA[ID PK]
+    nombre[Nombre]
+    anioNac[Año Nacimiento]
+    anioFallec[Año Fallecimiento]
+
 ```
 
 ---
