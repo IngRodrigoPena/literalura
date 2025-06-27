@@ -101,32 +101,60 @@ spring.jpa.show-sql=true
 
 ---
 
-## 🗂️ Diagrama de la Base de Datos
+## 🗂️Diagrama de Entidad-Relación (UML) de la Base de Datos
 
 ```mermaid
-erDiagram
-    LIBRO {
-        Long id PK
-        Long idGutendex UNIQUE
-        String titulo
-        String idioma
-        Integer numeroDescargas
+classDiagram
+    class Libro {
+        +Long id
+        +Long idGutendex
+        +String titulo
+        +String idioma
+        +Integer numeroDescargas
     }
-
-    AUTOR {
-        Long id PK
-        String nombre
-        Integer fechaNacimiento
-        Integer fechaMuerte
+    class Autor {
+        +Long id
+        +String nombre
+        +Integer anioNacimiento
+        +Integer anioFallecimiento
     }
+    Libro "1" -- "*" Autor : tiene >
 
-    LIBRO ||--o{ LIBRO_AUTOR : contiene
-    AUTOR ||--o{ LIBRO_AUTOR : escribe
+```
+## Diagrama Entidad-Relación Simulado con Gráfico de Nodos
 
-    LIBRO_AUTOR {
-        Long libro_id FK
-        Long autor_id FK
-    }
+```mermaid
+graph TD
+    Libro["Libro"]
+    Autor["Autor"]
+
+    Libro -->|tiene| Autor
+
+    subgraph Libro Atributos
+        id[ID (PK)]
+        idGutendex[ID Gutendex (Unique)]
+        titulo[Título]
+        idioma[Idioma]
+        numeroDescargas[Número de Descargas]
+    end
+
+    subgraph Autor Atributos
+        idA[ID (PK)]
+        nombre[Nombre]
+        anioNac[Año de Nacimiento]
+        anioFallec[Año de Fallecimiento]
+    end
+
+    Libro --> id
+    Libro --> idGutendex
+    Libro --> titulo
+    Libro --> idioma
+    Libro --> numeroDescargas
+
+    Autor --> idA
+    Autor --> nombre
+    Autor --> anioNac
+    Autor --> anioFallec
 ```
 
 ---
